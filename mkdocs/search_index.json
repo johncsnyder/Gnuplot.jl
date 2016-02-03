@@ -1,0 +1,24 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "API-INDEX",
+            "title": "Index"
+        },
+        {
+            "location": "/#api-index",
+            "text": "",
+            "title": "API-INDEX"
+        },
+        {
+            "location": "/Gnuplot/",
+            "text": "Gnuplot",
+            "title": "Gnuplot"
+        },
+        {
+            "location": "/Gnuplot/#gnuplot",
+            "text": "",
+            "title": "Gnuplot"
+        }
+    ]
+}
