@@ -5,6 +5,5 @@
 
 A gnuplot interface in Julia.
 
-
-
+[Documentation](http://johncsnyder.github.io/Gnuplot.jl)
 
