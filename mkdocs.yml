@@ -1,1 +1,26 @@
-site_name: My Docs
+
+site_name: Gnuplot
+
+site_name: Gnuplot.jl
+
+site_description: Electronic structure code in Julia
+
+repo_url: https://github.com/johncsnyder/Gnuplot.jl
+
+pages:
+- [index.md, Index]
+- [Gnuplot.md, Gnuplot]
+
+
+extra_javascript: ['http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML']
+
+# markdown_extensions: [math]
+
+markdown_extensions: 
+    - math:
+        enable_dollar_delimiter: True #for use of inline $..$
+
+# theme: readthedocs
+theme: mkdocs
+
+
