@@ -5,5 +5,7 @@
 
 A gnuplot interface in Julia.
 
+Installation via `Pkg.clone("https://github.com/johncsnyder/Gnuplot.jl.git")`.
+
 [Documentation](http://johncsnyder.github.io/Gnuplot.jl)
 
