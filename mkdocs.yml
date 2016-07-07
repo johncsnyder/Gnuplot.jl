@@ -20,7 +20,7 @@ markdown_extensions:
     - math:
         enable_dollar_delimiter: True #for use of inline $..$
 
-# theme: readthedocs
-theme: mkdocs
+theme: readthedocs
+# theme: mkdocs
 
 

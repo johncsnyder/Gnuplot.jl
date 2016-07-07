@@ -8,7 +8,7 @@ import Base.writemime
 
 
 
-export plot, plot!, xlims!, ylims!, write
+export plot, plot!, xlims!, ylims!, zlims!, write
 
 
 
@@ -279,11 +279,13 @@ type Figure3D <: Figure
     ylabel::AbstractString
     xlims::Union{Symbol,Tuple{Real,Real}}
     ylims::Union{Symbol,Tuple{Real,Real}}
+    zlims::Union{Symbol,Tuple{Real,Real}}
     imgfile::AbstractString
 end
 
 
-Figure3D(data; title="", xlabel="", ylabel="", xlims=:auto, ylims=:auto) = Figure3D(data, title, xlabel, ylabel, xlims, ylims, "")
+Figure3D(data; title="", xlabel="", ylabel="", xlims=:auto, ylims=:auto, zlims=:auto) = 
+    Figure3D(data, title, xlabel, ylabel, xlims, ylims, zlims, "")
 Figure3D() = Figure3D([])
 
 plot_figure(fig::Figure3D) = send_string("splot " * join([plot_string(d) for d in fig.data], ","))
@@ -386,6 +388,8 @@ plot!(x::AbstractVector;
         pointsize=pointsize,title=title,xlabel=xlabel,ylabel=ylabel,
         xlims=xlims,ylims=ylims)
 
+
+
 function plot(x::AbstractVector, y::AbstractVector;
         label="", style=:line, linecolor=:auto, linewidth=:auto,
         dashtype=:auto, pointtype=:auto, pointsize=:auto,
@@ -418,11 +422,12 @@ end
 function plot(x::AbstractVector, y::AbstractVector, z::AbstractVector;
         label="", style=:line, linecolor=:auto, linewidth=:auto,
         dashtype=:auto, pointtype=:auto, pointsize=:auto,
-        title="", xlabel="", ylabel="")
+        title="", xlabel="", ylabel="", xlims=:auto, ylims=:auto, zlims=:auto)
     global figures
     data = DiscreteData3D(x, y, z; label=label, style=style, linecolor=linecolor,
         linewidth=linewidth, dashtype=dashtype, pointtype=pointtype, pointsize=pointsize)
-    fig = Figure3D([data], title=title, xlabel=xlabel, ylabel=ylabel)
+    fig = Figure3D([data], title=title, xlabel=xlabel, ylabel=ylabel, xlims=xlims,
+        ylims=ylims, zlims=zlims)
     push!(figures, fig)
     fig
 end
@@ -454,6 +459,35 @@ function ylims!(ymin,ymax)
 	fig
 end
 
+function zlims!(zmin,zmax)
+    global figures
+    fig = figures[end]
+    @assert typeof(fig) == Figure3D
+    fig.zlims = (zmin,zmax)
+    fig
+end
+
+
+function set_range(fig::Figure2D)
+    if fig.xlims != :auto
+        send_string("set xrange [$(fig.xlims[1]):$(fig.xlims[2])]")
+    end
+    if fig.ylims != :auto
+        send_string("set yrange [$(fig.ylims[1]):$(fig.ylims[2])]")
+    end
+end
+
+function set_range(fig::Figure3D)
+    if fig.xlims != :auto
+        send_string("set xrange [$(fig.xlims[1]):$(fig.xlims[2])]")
+    end
+    if fig.ylims != :auto
+        send_string("set yrange [$(fig.ylims[1]):$(fig.ylims[2])]")
+    end
+    if fig.zlims != :auto
+        send_string("set zrange [$(fig.zlims[1]):$(fig.zlims[2])]")
+    end
+end
 
 
 function writemime(io::IO, ::MIME"image/svg+xml", fig::Figure)
@@ -465,12 +499,7 @@ function writemime(io::IO, ::MIME"image/svg+xml", fig::Figure)
         xlabel=fig.xlabel,
         ylabel=fig.ylabel,
     )
-    if fig.xlims != :auto
-		send_string("set xrange [$(fig.xlims[1]):$(fig.xlims[2])]")
-	end
-	if fig.ylims != :auto
-		send_string("set yrange [$(fig.ylims[1]):$(fig.ylims[2])]")
-	end
+    set_range(fig)
     write_data(fig)
     plot_figure(fig)
     send_string("unset output")
@@ -502,12 +531,7 @@ function Base.write(filename::AbstractString, fig::Figure)
         xlabel=fig.xlabel,
         ylabel=fig.ylabel,
     )
-    if fig.xlims != :auto
-        send_string("set xrange [$(fig.xlims[1]):$(fig.xlims[2])]")
-    end
-    if fig.ylims != :auto
-        send_string("set yrange [$(fig.ylims[1]):$(fig.ylims[2])]")
-    end
+    set_range(fig)
     write_data(fig)
     plot_figure(fig)
     send_string("reset")                    # reset all options
